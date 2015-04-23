@@ -40,6 +40,7 @@ import java.io.IOException;
 public class Plyingin3DActivity  extends ActionBarActivity  {
     private static Plyingin3DActivity master = null;
 
+
     private GLSurfaceView mGLView;
     private MyRenderer renderer = null;
     private FrameBuffer fb = null;
