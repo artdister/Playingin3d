@@ -1,41 +1,34 @@
 package com.example.artjem.playingin3d;
+//Test commit
 
 
-
-import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 
-import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
-import com.threed.jpct.IRenderHook;
+import com.threed.jpct.GLSLShader;
 import com.threed.jpct.Light;
+import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
-import com.threed.jpct.Loader;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
-import com.threed.jpct.TextureInfo;
-import com.threed.jpct.ITextureEffect;
-import com.threed.jpct.GLSLShader;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
-import java.io.IOException;
 
 public class Plyingin3DActivity  extends ActionBarActivity  {
     private static Plyingin3DActivity master = null;

@@ -7,12 +7,10 @@ import com.threed.jpct.Object3D;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureInfo;
 import com.threed.jpct.TextureManager;
-import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.World;
-
+import com.threed.jpct.util.BitmapHelper;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by Artjem on 23.04.2015.
@@ -67,10 +65,27 @@ public class PlanetObj {
     }
 
 
-    public static void loadTexture(){TextureManager.getInstance().addTexture(planetTexture, new Texture(BitmapHelper.rescale(BitmapHelper.convert(ctx.getResources().getDrawable(ctx.getResources().getIdentifier(planetTexture , "drawable", ctx.getPackageName()))), 512, 512)));}
-    public static void loadTextueHights(){TextureManager.getInstance().addTexture(planetTexture+"H", new Texture(BitmapHelper.rescale(BitmapHelper.convert(ctx.getResources().getDrawable(ctx.getResources().getIdentifier(planetTexture+"hights" , "drawable", ctx.getPackageName()))), 512, 512)));}
-    public static void loadTextureNormals(){TextureManager.getInstance().addTexture(planetTexture+"N", new Texture(BitmapHelper.rescale(BitmapHelper.convert(ctx.getResources().getDrawable(ctx.getResources().getIdentifier(planetTexture+"normals" , "drawable", ctx.getPackageName()))), 512, 512)));}
-    public static Object3D getPlanetObj(){ return planet;}
+    public static void loadTexture(){
+        TextureManager.getInstance().addTexture(planetTexture,
+                new Texture(BitmapHelper.rescale
+                        (BitmapHelper.convert(ctx.getResources().getDrawable(ctx.getResources().
+                                getIdentifier(planetTexture , "drawable", ctx.getPackageName()))),512, 512)));
+    }
+    public static void loadTextueHights(){
+        TextureManager.getInstance().addTexture(planetTexture+"H",
+                new Texture(BitmapHelper.rescale
+                        (BitmapHelper.convert(ctx.getResources().getDrawable(ctx.getResources().
+                                getIdentifier(planetTexture+"hights" , "drawable", ctx.getPackageName()))),512, 512)));
+    }
+    public static void loadTextureNormals(){
+        TextureManager.getInstance().addTexture(planetTexture+"N",
+                new Texture(BitmapHelper.rescale(BitmapHelper.convert(ctx.getResources().
+                        getDrawable(ctx.getResources().getIdentifier(planetTexture+"normals" ,
+                                "drawable", ctx.getPackageName()))), 512, 512)));}
+
+    public static Object3D getPlanetObj(){
+        return planet;
+    }
 
 
 }
