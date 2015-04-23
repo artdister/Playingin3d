@@ -1,5 +1,5 @@
 package com.example.artjem.playingin3d;
-//Test commit
+//Test commit Part2
 
 
 import android.graphics.PointF;
@@ -169,6 +169,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
     protected boolean isFullscreenOpaque() {
         return true;
     }
+
     class MyRenderer implements GLSurfaceView.Renderer {
 
         private long time = System.currentTimeMillis();
@@ -259,7 +260,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
             //sun.setPosition(cam.getCamPos());
             rotate = rotate -0.000005f;
-            planet.getPlanetObj().rotateY(rotate);
+            planet.getPlanetObj().rotateX(rotate);
 
 
             fb.clear(back);
