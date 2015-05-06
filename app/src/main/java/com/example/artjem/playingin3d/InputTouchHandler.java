@@ -1,6 +1,7 @@
 package com.example.artjem.playingin3d;
 
 import android.graphics.PointF;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 
 import com.threed.jpct.Logger;
@@ -13,13 +14,14 @@ import java.util.List;
  */
 public class InputTouchHandler {
 
-    private static List<PointF> touchPointList;
+    private static ArrayList<PointF> touchPointList;
+    private static ArrayList<PointF> touchList;
     private static PointF touch;
-
-
+    private static Float distance;
     public InputTouchHandler(){
         touchPointList = new ArrayList<PointF>();
         touch = new PointF();
+
     }
 
 
@@ -37,7 +39,7 @@ public class InputTouchHandler {
         touch.x = me.getX(pointerIndex)- touchPointList.get(0).x;
         touch.y = me.getY(pointerIndex)- touchPointList.get(0).y;
 
-        touchPointList.add(pointerIndex,touch);
+        touchPointList.add(pointerIndex, touch);
 
     }
 
@@ -53,7 +55,19 @@ public class InputTouchHandler {
         touchPointList.get(0).y = me.getY();
 
         if(touchPointList.size() == 2) {
-            Logger.log("   pointerId  " +touchPointList.get(touchPointList.size()-1).length());
+            float x2d = me.getX() - touchPointList.get(1).x;
+            float y2d = me.getY() - touchPointList.get(1).y;
+
+            touchPointList.get(1).x = me.getX();
+            touchPointList.get(1).y = me.getY();
+
+
+            distance = FloatMath.sqrt(FloatMath.pow((x2d - xd), 2) + FloatMath.pow((y2d - yd),2));
+
+
+
+            Logger.log("distance "+distance);
+        //    Logger.log("   pointerId  " +touchPointList.get(touchPointList.size()-1).length());
         }
         xd = xd /10f;
         yd = yd / 100f;

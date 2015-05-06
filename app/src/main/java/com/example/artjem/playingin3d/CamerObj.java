@@ -17,6 +17,7 @@ public class CamerObj {
 
     private static Camera cam;
     private static SimpleVector rotateVec;
+    private static SimpleVector rotateCenter;
     private static Matrix m = new Matrix();
     static float xAxis;
     static float yAxis;
@@ -25,6 +26,7 @@ public class CamerObj {
     public CamerObj(World world){
 
         rotateVec = new SimpleVector();
+        rotateCenter = new SimpleVector();
         cam = world.getCamera();
 
         xAxis = 0;
@@ -52,9 +54,9 @@ public class CamerObj {
         }
 
 
-            rotateVec.x = distance * -FloatMath.sin(xAxis * ((float) Math.PI / 180)) * FloatMath.cos((yAxis) * ((float) Math.PI / 180));
-            rotateVec.y = distance * -FloatMath.sin((yAxis) * ((float) Math.PI / 180));
-            rotateVec.z = -distance * FloatMath.cos((xAxis) * ((float) Math.PI / 180)) * FloatMath.cos((yAxis) * ((float) Math.PI / 180));
+            rotateVec.x =(distance * -FloatMath.sin(xAxis * ((float) Math.PI / 180)) * FloatMath.cos((yAxis) * ((float) Math.PI / 180)))+rotateCenter.x;
+            rotateVec.y =(distance * -FloatMath.sin((yAxis) * ((float) Math.PI / 180)))+rotateCenter.y;
+            rotateVec.z =(-distance * FloatMath.cos((xAxis) * ((float) Math.PI / 180)) * FloatMath.cos((yAxis) * ((float) Math.PI / 180)))+rotateCenter.z;
             cam.setPosition(rotateVec.x, rotateVec.y, rotateVec.z);
 
 
@@ -68,9 +70,11 @@ public class CamerObj {
     }
 
 
-
+    public static void setRotateCenter(SimpleVector newRotateCenter){
+        rotateCenter = newRotateCenter;
+    }
     public static void focusonPlanet(Object3D planet){
-        cam.lookAt(planet.getCenter());
+        cam.lookAt(planet.getTransformedCenter());
     }
     public static SimpleVector getCamPos(){return rotateVec;}
 
