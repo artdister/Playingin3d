@@ -2,18 +2,21 @@ package com.example.artjem.playingin3d;
 
 
 
-
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 
-import com.threed.jpct.Config;
+import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
+import com.threed.jpct.IRenderHook;
 import com.threed.jpct.Light;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
+import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.Loader;
 import com.threed.jpct.SimpleVector;
@@ -22,6 +25,8 @@ import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
+import com.threed.jpct.TextureInfo;
+import com.threed.jpct.ITextureEffect;
 import com.threed.jpct.GLSLShader;
 
 import java.lang.reflect.Field;
@@ -31,11 +36,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 import java.io.IOException;
-import java.util.ArrayList;
-
-import Planetlib.Hemisphere;
-import Planetlib.Planet;
-import Planetlib.SphereObj;
 
 public class Plyingin3DActivity  extends ActionBarActivity  {
     private static Plyingin3DActivity master = null;
@@ -50,9 +50,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
     PointF touchPoint = null;
 
     private CamerObj cam;
-    private ArrayList<Planet> planets = new ArrayList<Planet>();
-    private ArrayList<Hemisphere> hemispheres = new ArrayList<Hemisphere>();
-
+    private PlanetObj planet = null;
 
     private Object3D space = null;
     private SimpleVector rotateVec = new SimpleVector();
@@ -88,8 +86,6 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 return configs[0];
             }
         });
-        Config.farPlane = 5000;
-        Config.glTrilinear = true;
 
 
 
@@ -137,6 +133,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
         int pointerIndex = me.getActionIndex();
 
         int maskedAction = me.getActionMasked();
+        Logger.log("HALLO");
         switch (maskedAction) {
 
             case MotionEvent.ACTION_DOWN:{
@@ -203,9 +200,9 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 sun.enable();
 
                 sun.setIntensity(127, 127, 255);
-                sun.setPosition(SimpleVector.create(0, 0, 20));
+                sun.setPosition(SimpleVector.create(0, 0, 200));
 
-                world.setAmbientLight(27, 27, 27);
+                world.setAmbientLight(0, 0, 0);
 
 
 
@@ -214,11 +211,10 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
 
                 try{
-                    space = Object3D.mergeAll(Loader.load3DS(getResources().getAssets().open("planet.3ds"),4000));
+                    space = Object3D.mergeAll(Loader.load3DS(getResources().getAssets().open("planet.3ds"),10));
                     space.setTexture("skyline");
-
+                    space.setScale(30);
                     space.setCulling(false);
-                    space.setAdditionalColor(67,67,67);
                     space.strip();
 
                     space.build();
@@ -230,29 +226,11 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 world.addObject(space);
 
 
-                planets.add(new Planet(getApplicationContext(), "sun" ,100f));
-                planets.get(0).addColor(255, 100, 1);
-
-                world.addObject(planets.get(0).getPlanetObj());
-
-
-                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 10));
-
-                world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
-//
-
-
-                planets.add(new Planet(getApplicationContext(), "earth",10f));
-                planets.get(1).getPlanetObj().translate(0,0,-200);
-                world.addObject(planets.get(1).getPlanetObj());
-
-
+                planet = new PlanetObj(getApplicationContext(), world, "earth");
 
 
                 String vertex=Loader.loadTextFile(getResources().openRawResource(R.raw.vertexshader_offset));
                 String fragment=Loader.loadTextFile(getResources().openRawResource(R.raw.fragmentshader_offset));
-
-
 
                 shader=new GLSLShader(vertex, fragment);
                 shader.setStaticUniform("colorMap", 0);
@@ -283,31 +261,17 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
         public void onDrawFrame(GL10 gl) {
 
-            if(rotate >= 360 ){
-                rotate = 0;
-            }else{
-                rotate = rotate + 0.000005f;
-                planets.get(0).getPlanetObj().rotateY(-rotate);
-
-            }
-
-
-
-
             cam.onRendering(touchPoint.x, touchPoint.y);
-            cam.focusonPlanet(planets.get(1).getPlanetObj());
-            cam.setRotateCenter((planets.get(1).getPlanetObj().getTransformedCenter()));
+            cam.focusonPlanet(planet.getPlanetObj());
 
             //sun.setPosition(cam.getCamPos());
-
-
+            rotate = rotate -0.000005f;
+            planet.getPlanetObj().rotateY(rotate);
 
 
             fb.clear(back);
-
             world.renderScene(fb);
             world.draw(fb);
-
             fb.display();
 
             if (System.currentTimeMillis() - time >= 1000) {
