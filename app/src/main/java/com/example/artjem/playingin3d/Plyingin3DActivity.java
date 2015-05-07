@@ -230,15 +230,15 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 world.addObject(space);
 
 
-                planets.add(new Planet(getApplicationContext(), "sun",100f));
+                planets.add(new Planet(getApplicationContext(), "sun" ,100f));
                 planets.get(0).addColor(255, 100, 1);
 
                 world.addObject(planets.get(0).getPlanetObj());
 
 
-                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 0));
+                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 10));
 
-               // world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
+                world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
 
 
 
