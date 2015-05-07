@@ -27,7 +27,7 @@ public class Planet extends SphereObj   {
         this.getPlanetObj().setTexture(ti);
         this.getPlanetObj().setSpecularLighting(true);
 
-
+//
 
     }
 

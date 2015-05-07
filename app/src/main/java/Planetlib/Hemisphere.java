@@ -26,7 +26,7 @@ public class Hemisphere extends SphereObj {
         TextureInfo ti = new TextureInfo(TextureManager.getInstance().getTextureID(planetTexture));
         ti.add(TextureManager.getInstance().getTextureID(planetTexture+"H"), TextureInfo.MODE_MODULATE);
        // this.getPlanetObj().setTexture(ti);
-
+//
     }
 
 

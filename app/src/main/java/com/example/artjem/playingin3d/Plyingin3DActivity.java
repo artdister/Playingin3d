@@ -239,7 +239,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 10));
 
                 world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
-
+//
 
 
                 planets.add(new Planet(getApplicationContext(), "earth",10f));
