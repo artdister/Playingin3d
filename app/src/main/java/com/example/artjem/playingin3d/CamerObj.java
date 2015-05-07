@@ -76,6 +76,7 @@ public class CamerObj {
     public static void focusonPlanet(Object3D planet){
         cam.lookAt(planet.getTransformedCenter());
     }
+
     public static SimpleVector getCamPos(){return rotateVec;}
 
 }

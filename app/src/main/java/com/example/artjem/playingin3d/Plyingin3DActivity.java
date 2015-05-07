@@ -2,40 +2,37 @@ package com.example.artjem.playingin3d;
 
 
 
-import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 
-import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
-import com.threed.jpct.IRenderHook;
+import com.threed.jpct.GLSLShader;
 import com.threed.jpct.Light;
+import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
-import com.threed.jpct.Loader;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
-import com.threed.jpct.TextureInfo;
-import com.threed.jpct.ITextureEffect;
-import com.threed.jpct.GLSLShader;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
-import java.io.IOException;
+
+import Planetlib.Hemisphere;
+import Planetlib.Planet;
 
 public class Plyingin3DActivity  extends ActionBarActivity  {
     private static Plyingin3DActivity master = null;
@@ -48,6 +45,11 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
     private RGBColor back = new RGBColor(50, 50, 100);
 
     PointF touchPoint = null;
+
+
+    private ArrayList<Planet> planets = new ArrayList<Planet>();
+    private ArrayList<Hemisphere> hemispheres = new ArrayList<Hemisphere>();
+
 
     private CamerObj cam;
     private PlanetObj planet = null;
@@ -202,7 +204,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 sun.setIntensity(127, 127, 255);
                 sun.setPosition(SimpleVector.create(0, 0, 200));
 
-                world.setAmbientLight(0, 0, 0);
+                world.setAmbientLight(20, 20, 20);
 
 
 
@@ -216,7 +218,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                     space.setScale(30);
                     space.setCulling(false);
                     space.strip();
-
+                    space.setAdditionalColor(150,150,150);
                     space.build();
 
 
@@ -226,9 +228,24 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 world.addObject(space);
 
 
-                planet = new PlanetObj(getApplicationContext(), world, "earth");
+
+                planets.add(new Planet(getApplicationContext(), "sun",100f));
+                planets.get(0).addColor(255, 100, 1);
+
+                world.addObject(planets.get(0).getPlanetObj());
 
 
+                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 0));
+
+                // world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
+
+
+
+                planets.add(new Planet(getApplicationContext(), "earth",10f));
+                planets.get(1).getPlanetObj().translate(0,0,-200);
+                world.addObject(planets.get(1).getPlanetObj());
+
+//
                 String vertex=Loader.loadTextFile(getResources().openRawResource(R.raw.vertexshader_offset));
                 String fragment=Loader.loadTextFile(getResources().openRawResource(R.raw.fragmentshader_offset));
 
@@ -237,7 +254,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 shader.setStaticUniform("normalMap", 0);
                 shader.setStaticUniform("invRadius", 10.0005f);
 
-                //planet.setRenderHook(shader);
+              //  planet.setRenderHook(shader);
 
 
 
@@ -262,11 +279,12 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
         public void onDrawFrame(GL10 gl) {
 
             cam.onRendering(touchPoint.x, touchPoint.y);
-            cam.focusonPlanet(planet.getPlanetObj());
+            cam.focusonPlanet(planets.get(1).getPlanetObj());
+            cam.setRotateCenter((planets.get(1).getPlanetObj().getTransformedCenter()));
 
             //sun.setPosition(cam.getCamPos());
             rotate = rotate -0.000005f;
-            planet.getPlanetObj().rotateY(rotate);
+            planets.get(1).getPlanetObj().rotateY(rotate);
 
 
             fb.clear(back);
