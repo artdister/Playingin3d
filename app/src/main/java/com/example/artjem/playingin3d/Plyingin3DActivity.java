@@ -52,7 +52,6 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
 
     private CamerObj cam;
-    private PlanetObj planet = null;
 
     private Object3D space = null;
     private SimpleVector rotateVec = new SimpleVector();
@@ -135,31 +134,30 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
         int pointerIndex = me.getActionIndex();
 
         int maskedAction = me.getActionMasked();
-        Logger.log("HALLO");
         switch (maskedAction) {
 
             case MotionEvent.ACTION_DOWN:{
-                intouchHandle.actionDown(me);
+                InputTouchHandler.actionDown(me);
                 break;
             }
 
             case MotionEvent.ACTION_POINTER_DOWN: {
-                intouchHandle.actionPointerDown(me,pointerIndex);
+                InputTouchHandler.actionPointerDown(me, pointerIndex);
                 break;
             }
 
             case MotionEvent.ACTION_MOVE: {
-                touchPoint = intouchHandle.actionMove(me);
+                touchPoint = InputTouchHandler.actionMove(me);
                 break;
             }
 
             case MotionEvent.ACTION_UP:{
-                intouchHandle.actionUp(me);
+                InputTouchHandler.actionUp(me);
                 break;
             }
 
             case MotionEvent.ACTION_POINTER_UP:{
-                intouchHandle.actionPointerUp(me, pointerIndex);
+                InputTouchHandler.actionPointerUp(me, pointerIndex);
                 break;
             }
 
@@ -178,6 +176,7 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
     protected boolean isFullscreenOpaque() {
         return true;
     }
+
     class MyRenderer implements GLSurfaceView.Renderer {
 
         private long time = System.currentTimeMillis();
@@ -201,10 +200,10 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
                 sun = new Light(world);
                 sun.enable();
 
-                sun.setIntensity(127, 127, 255);
+                sun.setIntensity(127, 127, 127);
                 sun.setPosition(SimpleVector.create(0, 0, 200));
 
-                world.setAmbientLight(20, 20, 20);
+                world.setAmbientLight(30, 30, 30);
 
 
 
@@ -229,21 +228,26 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
 
 
-                planets.add(new Planet(getApplicationContext(), "sun",100f));
-                planets.get(0).addColor(255, 100, 1);
-
+                planets.add(new Planet(getApplicationContext(), "sun2",100f));
+                planets.get(0).addColor(255, 255, 255);
+                planets.get(0).getPlanetObj().setLighting(1);
                 world.addObject(planets.get(0).getPlanetObj());
 
 
-                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",150f, 0));
 
-                // world.addObject(hemispheres.get(hemispheres.size()-1).getPlanetObj());
 
 
 
                 planets.add(new Planet(getApplicationContext(), "earth",10f));
                 planets.get(1).getPlanetObj().translate(0,0,-200);
+                planets.get(1).getPlanetObj().setAdditionalColor(76,76,76);
                 world.addObject(planets.get(1).getPlanetObj());
+
+                hemispheres.add(new Hemisphere(getApplicationContext(), "earth",10.05f, 6));
+                hemispheres.get(0).getPlanetObj().translate(0,0,-200);
+             //   hemispheres.get(0).getPlanetObj().setAdditionalColor(127,127,0);
+
+                world.addObject(hemispheres.get(0).getPlanetObj());
 
 //
                 String vertex=Loader.loadTextFile(getResources().openRawResource(R.raw.vertexshader_offset));
@@ -278,16 +282,16 @@ public class Plyingin3DActivity  extends ActionBarActivity  {
 
         public void onDrawFrame(GL10 gl) {
 
-            cam.onRendering(touchPoint.x, touchPoint.y);
-            cam.focusonPlanet(planets.get(1).getPlanetObj());
-            cam.setRotateCenter((planets.get(1).getPlanetObj().getTransformedCenter()));
+            CamerObj.onRendering(touchPoint.x, touchPoint.y);
+            CamerObj.focusonPlanet(planets.get(1).getPlanetObj());
+            CamerObj.setRotateCenter((planets.get(1).getPlanetObj().getTransformedCenter()));
 
             //sun.setPosition(cam.getCamPos());
             rotate = rotate -0.000005f;
             planets.get(1).getPlanetObj().rotateY(rotate);
 
 
-            fb.clear(back);
+            fb.clear();
             world.renderScene(fb);
             world.draw(fb);
             fb.display();

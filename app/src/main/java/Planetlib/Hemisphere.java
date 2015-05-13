@@ -9,24 +9,29 @@ import com.threed.jpct.TextureManager;
  * Created by Artjem on 04.05.2015.
  */
 
-
+import com.threed.jpct.Logger;
 public class Hemisphere extends SphereObj {
     private int a;
     public static String planetTexture = null;
     public Hemisphere(Context ctx,String planetTexture, float size, int alpha){
 
         super(ctx,size);
-        this.planetTexture = planetTexture;
+        Hemisphere.planetTexture = planetTexture;
         this.a = alpha;
 
 
+        loadTexture(planetTexture, "H","h");
+        loadTexture(planetTexture,"HN","hn");
+
+        TextureInfo ti = new TextureInfo(TextureManager.getInstance().getTextureID(planetTexture+"H"));
+        ti.add(TextureManager.getInstance().getTextureID(planetTexture+"HN"), TextureInfo.MODE_MODULATE);
+
+        this.getPlanetObj().setTexture(ti);
         this.getPlanetObj().setTransparency(this.a);
-        loadTexture(planetTexture,"H","hights");
 
-        TextureInfo ti = new TextureInfo(TextureManager.getInstance().getTextureID(planetTexture));
-        ti.add(TextureManager.getInstance().getTextureID(planetTexture+"H"), TextureInfo.MODE_MODULATE);
-       // this.getPlanetObj().setTexture(ti);
 
+        this.getPlanetObj().strip();
+        this.getPlanetObj().build();
     }
 
 

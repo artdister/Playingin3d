@@ -16,16 +16,16 @@ public class Planet extends SphereObj   {
 
     public Planet(Context ctx,String planetTexture, float size){
         super(ctx,size);
-        this.planetTexture = planetTexture;
+        Planet.planetTexture = planetTexture;
 
 
         loadTexture(planetTexture,"","");
-        loadTexture(planetTexture,"N","normals");
+        loadTexture(planetTexture,"N","n");
 
         TextureInfo ti = new TextureInfo(TextureManager.getInstance().getTextureID(planetTexture));
         ti.add(TextureManager.getInstance().getTextureID(planetTexture+"N"), TextureInfo.MODE_MODULATE);
         this.getPlanetObj().setTexture(ti);
-        this.getPlanetObj().setSpecularLighting(true);
+        this.getPlanetObj().setSpecularLighting(false);
 
 
 
